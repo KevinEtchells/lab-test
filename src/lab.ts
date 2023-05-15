@@ -15,16 +15,25 @@ const Lab = class {
     name: string;
     variants: Variant[] = [];
     chosenVariant: Variant;
+    collectionUrl: string | undefined;
 
     report = (property: string) => {
-        window.plausible(this.name, {props: {variant: this.chosenVariant.variantIndex, property: property}});
+        if (this.collectionUrl) {
+            fetch(`${this.collectionUrl}\?test=${this.name}&variant=${this.chosenVariant.variantIndex}&property=${property}`);
+        } else {
+            window.plausible(this.name, {props: {variant: this.chosenVariant.variantIndex, property: property}});
+        }
     };
    
-    constructor(name: string) {
+    constructor(name: string, collectionUrl?: string) {
         this.name = name;
 
-        // setup Plausible
-        window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }
+        if (collectionUrl) {
+            this.collectionUrl = collectionUrl;
+        } else {
+            // setup Plausible
+            window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }
+        }
     }
 
     addVariant(code?: {html: string, container: string, css: string, javascript: Function}) {

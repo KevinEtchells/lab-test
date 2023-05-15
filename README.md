@@ -4,13 +4,13 @@ Light A-B Testing
 
 ## Introduction
 
-A light, cookieless, A/B testing framework. It currently works with Plausible Analytics for capturing data, but alternatives are being added soon.
+A light, cookieless, A/B testing framework. It currently works with Plausible Analytics and custom-built data-capture solutions.
 
 
-## Get started
+## Getting started
 
 ```
-// Create a test
+// Create a test, defaults to using Plausible
 const myTest = new Lab('testName');
 
 // Add first variant
@@ -33,4 +33,21 @@ myTest.addVariant({
 
 // Start the test
 myTest.start();
+```
+
+## Custom data-capture solutions
+```
+// create a test, passing in the custom function name
+const myTest = new Lab('testName', 'https://my-custom-function');
+
+// When report() is called, it will add the following querystring paramaters to the function call:
+/*
+test=[testName]
+variant=[variant]
+property=[propertyPassedInFromReportFunction] (plus any auto-generated properties)
+*/
+
+// an example function is included in examples/firebase-data-collection.js
+
+// the rest of the code is as per the "Getting started" section
 ```
